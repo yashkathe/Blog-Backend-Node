@@ -11,9 +11,22 @@ export const getAllBlogs = async (req: Request, res: Response, next: NextFunctio
     try {
 
         let blogMetaData = await BlogData.find({}, 'title date')
-
         return res.status(200).json({ message: 'OK', data: blogMetaData })
 
+    } catch (err) {
+        return res.status(500).json({ message: 'ERR', cause: err })
+    }
+
+}
+
+export const getBlogById = async (req: Request, res: Response, next: NextFunction) => {
+
+    try {
+        let { id } = req.params
+
+        let blog = await BlogData.findById(id)
+        return res.status(200).json({ message: 'OK', data: blog })
+        
     } catch (err) {
         return res.status(500).json({ message: 'ERR', cause: err })
     }
