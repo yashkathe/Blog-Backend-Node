@@ -14,7 +14,8 @@ export const getAllBlogs = async (req: Request, res: Response, next: NextFunctio
 
     try {
 
-        let blogMetaData = await BlogData.find({}, 'title date')
+        let blogMetaData = await BlogData.find({}, 'title coverImage description date tags')
+
         return res.status(200).json({ message: 'OK', data: blogMetaData })
 
     } catch (err) {
@@ -46,7 +47,7 @@ export const saveBlogData = async (req: Request, res: Response, next: NextFuncti
         await uploadSingle(req, res)
 
         const imagePath = req.file?.path
-        const { title, content, date } = req.body
+        const { title, description, content, tags, date } = req.body
 
         // check if blog with same title exists
         let blogWithSameTitle = await BlogData.findOne({ title })
@@ -57,7 +58,9 @@ export const saveBlogData = async (req: Request, res: Response, next: NextFuncti
         // save new blog
         const newBlog = new BlogData({
             title,
+            description,
             content,
+            tags: tags.trim().split(','),
             coverImage: imagePath,
             date: date || new Date()
         })
@@ -88,9 +91,9 @@ export const saveImage = async (req: Request, res: Response, next: NextFunction)
             path: imagePath
         })
 
-        await newImage.save() 
+        await newImage.save()
 
-        return res.status(200).json({message: 'OK', data: newImage})
+        return res.status(200).json({ message: 'OK', data: newImage })
 
     } catch (err) {
         return res.status(500).json({ message: 'ERR', cause: err })
