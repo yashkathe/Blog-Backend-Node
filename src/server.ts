@@ -1,4 +1,5 @@
 import express from 'express'
+import path from 'path'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import mongoose from 'mongoose'
@@ -14,6 +15,9 @@ app.use(express.json())
 
 // load CORS
 app.use(cors())
+
+// server static files
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')))
 
 // load routes
 app.use('/', routes)

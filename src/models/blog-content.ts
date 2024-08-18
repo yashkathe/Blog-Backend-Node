@@ -1,15 +1,19 @@
 import mongoose from "mongoose";
 
 const blogDataSchema = new mongoose.Schema({
-    title:{
+    title: {
         type: String,
         required: true
     },
-    content:{
+    content: {
         type: String,
         required: true
     },
-    date:{
+    coverImage: {
+        type: String,
+        required: true
+    },
+    date: {
         type: Date,
         required: true
     }
