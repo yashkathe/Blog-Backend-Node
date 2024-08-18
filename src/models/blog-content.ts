@@ -5,12 +5,20 @@ const blogDataSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    description: {
+        type: String,
+        required: true
+    },
     content: {
         type: String,
         required: true
     },
     coverImage: {
         type: String,
+        required: true
+    },
+    tags: {
+        type: [String],
         required: true
     },
     date: {
