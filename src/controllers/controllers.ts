@@ -2,10 +2,12 @@ import { Request, Response, NextFunction } from "express"
 import { promisify } from "util"
 
 import BlogData from "../models/blog-content"
+import ImageUpload from "../models/image-upload"
+
 import { upload } from "../middleware/upload"
 
 export const testFn = async (req: Request, res: Response, next: NextFunction) => {
-    res.send('API is working!\n1. [POST] /save-blog/\n2. [GET] /get-blogs')
+    res.send('API is working!\n1. [POST] /save-blog/ \n2. [POST] /upload-image\n3. [GET] /get-blogs \n4. [GET] /get-blog-by-id/:id')
 }
 
 export const getAllBlogs = async (req: Request, res: Response, next: NextFunction) => {
@@ -63,6 +65,32 @@ export const saveBlogData = async (req: Request, res: Response, next: NextFuncti
         await newBlog.save()
 
         return res.status(200).json({ message: 'OK', data: newBlog })
+
+    } catch (err) {
+        return res.status(500).json({ message: 'ERR', cause: err })
+    }
+
+}
+
+export const saveImage = async (req: Request, res: Response, next: NextFunction) => {
+
+    try {
+
+        // handle image upload
+        const uploadImage = promisify(upload.single('image'))
+        await uploadImage(req, res)
+
+        const imagePath = req.file?.path
+        const imageName = req.file?.originalname
+
+        const newImage = new ImageUpload({
+            filename: imageName,
+            path: imagePath
+        })
+
+        await newImage.save() 
+
+        return res.status(200).json({message: 'OK', data: newImage})
 
     } catch (err) {
         return res.status(500).json({ message: 'ERR', cause: err })
